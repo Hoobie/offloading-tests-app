@@ -17,6 +17,12 @@ export class HomePage {
       let tasks = [];
       let t = this;
 
+      let onBatteryStatus = function(status) {
+        console.debug("Level: " + status.level + " isPlugged: " + status.isPlugged);
+        t.log("[BATTERY] Level: " + status.level);
+      };
+      window.addEventListener("batterystatus", onBatteryStatus, false);
+
       let cpuTask = new Task(
         Rx.Observable.create(function(observer) {
           let a = 0;
@@ -25,7 +31,7 @@ export class HomePage {
           }
           t.log("[CPU] Calculated the result: " + a);
           observer.complete();
-        }), 5000);
+        }), 20000);
       tasks.push(cpuTask);
 
       let wifiTask = new Task(
@@ -38,10 +44,10 @@ export class HomePage {
           var img = new Image();
           img.onload = ld;
           img.src = "http://www.tipsforlawyers.com/wp-content/uploads/2014/08/networking-links.jpg?" + Math.random() + '=' + new Date();
-        }), 5000);
+        }), 20000);
       tasks.push(wifiTask);
 
-      this.log("Running all the tasks");
+      this.log("[DEBUG] Running all the tasks");
       let tasksRunner = new TasksRunner(tasks);
       tasksRunner.runAll().subscribe(function(data) {
         t.log("[DEBUG] The task is done");
@@ -52,6 +58,7 @@ export class HomePage {
   }
 
   log(msg: string) {
-    this.output += "> " + msg + "<br/>";
+    let date = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+    this.output += date + "> " + msg + "<br/>";
   }
 }
