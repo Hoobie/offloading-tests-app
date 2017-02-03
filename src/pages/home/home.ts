@@ -1,7 +1,6 @@
 import { TasksRunner } from "./tasks/tasks-runner";
 import { Task } from "./tasks/task";
 import { Component } from '@angular/core';
-import { Http, Headers, RequestOptions, ResponseContentType, Response } from '@angular/http';
 import { NavController, Platform } from 'ionic-angular';
 import * as Rx from 'rxjs';
 
@@ -13,7 +12,7 @@ export class HomePage {
 
   output = "";
 
-  constructor(public navCtrl: NavController, public plt: Platform, private http: Http) {
+  constructor(public navCtrl: NavController, public plt: Platform) {
     this.plt.ready().then(() => {
       let tasks = [];
       let t = this;
