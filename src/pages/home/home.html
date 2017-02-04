@@ -5,6 +5,16 @@
 </ion-header>
 
 <ion-content padding>
+  <ion-list>
+    <ion-item>
+      <ion-label color="primary">Duration of CPU tasks</ion-label>
+      <ion-input #cpuDuration placeholder="seconds"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label color="primary">Duration of WiFi tasks</ion-label>
+      <ion-input #wifiDuration placeholder="seconds"></ion-input>
+    </ion-item>
+  </ion-list>
   <div id="output" [innerHTML]="output"></div>
-  <button ion-button full (click)="runAllTasks()">Run all the tasks</button>
+  <button ion-button full (click)="runAllTasks(cpuDuration.value, wifiDuration.value)">Run all the tasks</button>
 </ion-content>
