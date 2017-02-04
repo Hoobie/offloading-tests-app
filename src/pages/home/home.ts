@@ -25,7 +25,7 @@ export class HomePage {
     let cpuTask = new Task(
       Rx.Observable.create(function(observer) {
         let a = 0;
-        for (let i = 0; i < 100000000; i++) {
+        for (let i = 0; i < 500000000; i++) {
           a = Math.sqrt(i);
         }
         t.log("[CPU] Calculated the result: " + a);

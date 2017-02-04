@@ -13,11 +13,13 @@ export class Task {
     let t = this;
     return Rx.Observable.create(function(observer) {
       let now = Date.now();
+      let timeout;
 
       let onCompleteCallback = function() {
         if (Date.now() < now + t.durationMs) {
           let sub = t.observable.subscribe(function(data) { }, function(err) { }, onCompleteCallback);
-          setTimeout(function() {
+          clearTimeout(timeout);
+          timeout = setTimeout(function() {
             sub.dispose();
             observer.complete();
           }, now - t.durationMs);
