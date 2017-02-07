@@ -56,9 +56,21 @@ export class HomePage {
       let t = this;
 
       let tasksRunner = new TasksRunner(this.tasks);
+      (window as MyWindow).startPowerMeasurements(function(battery) {
+      });
       tasksRunner.runAll().subscribe(function(data) {
         t.log("[DEBUG] The task is done");
-      }, function(err) { }, function() {
+        (window as MyWindow).stopPowerMeasurements(function(battery) {
+          t.log("[POW_PROFILES] stats: " + JSON.stringify(battery));
+        });
+        (window as MyWindow).startPowerMeasurements(function(battery) {
+        });
+      }, function(err) {
+        (window as MyWindow).stopPowerMeasurements(function(battery) {
+        });
+      }, function() {
+        (window as MyWindow).stopPowerMeasurements(function(battery) {
+        });
         t.log("[DEBUG] All the tasks are done");
       });
     });

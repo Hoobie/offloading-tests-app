@@ -12,3 +12,8 @@
   https://www.typescriptlang.org/docs/handbook/declaration-files/introduction.html
 */
 declare module '*';
+
+interface MyWindow extends Window {
+  startPowerMeasurements(fun: (data) => any): any;
+  stopPowerMeasurements(fun: (data) => any): any;
+}
