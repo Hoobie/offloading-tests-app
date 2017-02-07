@@ -78,6 +78,6 @@ export class HomePage {
 
   log(msg: string) {
     let date = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
-    this.output += date + "> " + msg + "<br/>";
+    this.output += "<li>" + date + "> " + msg + "</li>";
   }
 }
