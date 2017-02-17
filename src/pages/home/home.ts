@@ -56,7 +56,10 @@ export class HomePage {
       let t = this;
 
       let tasksRunner = new TasksRunner(this.tasks);
-      (window as MyWindow).startPowerMeasurements(function(battery) {
+      (window as MyWindow).startPowerMeasurements(function(msg) {
+        if (msg) {
+          t.log("[POW_PROFILES] " + msg);
+        }
       });
       tasksRunner.runAll().subscribe(function(data) {
         t.log("[DEBUG] The task is done");
