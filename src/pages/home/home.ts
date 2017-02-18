@@ -22,7 +22,7 @@ export class HomePage {
     };
     window.addEventListener("batterystatus", onBatteryStatus, false);
 
-    this.log("[DEBUG] Ready")
+    this.debug("Ready")
   }
 
   runAllTasks(cpuDuration: number, wifiDuration: number) {
@@ -52,7 +52,7 @@ export class HomePage {
         }), wifiDuration * 1000);
       this.tasks.push(wifiTask);
 
-      this.log("[DEBUG] Running all the tasks");
+      this.debug("Running all the tasks");
       let t = this;
 
       let tasksRunner = new TasksRunner(this.tasks);
@@ -62,7 +62,7 @@ export class HomePage {
         }
       });
       tasksRunner.runAll().subscribe(function(data) {
-        t.log("[DEBUG] The task is done");
+        t.debug("The task is done");
         (window as MyWindow).stopPowerMeasurements(function(battery) {
           t.log("[POW_PROFILES] stats: " + JSON.stringify(battery));
         });
@@ -74,9 +74,13 @@ export class HomePage {
       }, function() {
         (window as MyWindow).stopPowerMeasurements(function(battery) {
         });
-        t.log("[DEBUG] All the tasks are done");
+        t.debug("All the tasks are done");
       });
     });
+  }
+
+  debug(msg: string) {
+    this.log("[DEBUG] " + msg);
   }
 
   log(msg: string) {
