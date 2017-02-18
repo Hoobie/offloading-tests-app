@@ -20,7 +20,7 @@ export class TasksRunner {
         }
 
         if (tasks.length > 0) {
-          tasks.pop().run().subscribe(function(data) { }, function(err) { }, onCompleteCallback);
+          tasks.shift().run().subscribe(function(data) { }, function(err) { }, onCompleteCallback);
         } else {
           console.log("All the tasks are done");
           observer.complete();
