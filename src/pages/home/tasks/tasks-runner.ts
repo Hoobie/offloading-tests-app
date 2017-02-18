@@ -27,6 +27,6 @@ export class TasksRunner {
         }
       };
       onCompleteCallback();
-    });
+    }).subscribeOn(Rx.Scheduler.async).observeOn(Rx.Scheduler.async);
   }
 }

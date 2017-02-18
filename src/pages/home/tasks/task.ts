@@ -1,11 +1,13 @@
 import * as Rx from 'rxjs';
 
 export class Task {
-  observable;
-  durationMs;
+  observable: Rx.Observable<void>;
+  durationMs: number;
 
   constructor(observable: Rx.Observable<void>, durationMs: number) {
-    this.observable = observable;
+    this.observable = observable
+      .observeOn(Rx.Scheduler.async)
+      .subscribeOn(Rx.Scheduler.async);
     this.durationMs = durationMs;
   }
 
@@ -20,7 +22,7 @@ export class Task {
           let sub = t.observable.subscribe(function(data) { }, function(err) { }, onCompleteCallback);
           clearTimeout(timeout);
           timeout = setTimeout(function() {
-            sub.dispose();
+            sub.unsubscribe();
             observer.complete();
           }, now - t.durationMs);
         } else {
@@ -30,6 +32,6 @@ export class Task {
         }
       };
       onCompleteCallback();
-    });
+    }).subscribeOn(Rx.Scheduler.async).observeOn(Rx.Scheduler.async);
   }
 }
