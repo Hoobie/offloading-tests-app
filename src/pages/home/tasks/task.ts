@@ -4,7 +4,7 @@ export class Task {
   observable;
   durationMs;
 
-  constructor(observable: () => Rx.Observable<void>, durationMs: number) {
+  constructor(observable: Rx.Observable<void>, durationMs: number) {
     this.observable = observable;
     this.durationMs = durationMs;
   }
@@ -24,6 +24,7 @@ export class Task {
             observer.complete();
           }, now - t.durationMs);
         } else {
+          clearTimeout(timeout);
           console.debug("The task is done")
           observer.complete();
         }
