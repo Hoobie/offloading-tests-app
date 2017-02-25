@@ -10,9 +10,13 @@
       <ion-label color="secondary">Duration of CPU tasks</ion-label>
       <ion-input #cpuDuration placeholder="seconds"></ion-input>
     </ion-item>
-    <ion-item>
+    <!-- <ion-item>
       <ion-label color="secondary">Duration of WiFi tasks</ion-label>
       <ion-input #wifiDuration placeholder="seconds"></ion-input>
+    </ion-item> -->
+    <ion-item>
+      <ion-label color="secondary">Duration of FR tasks</ion-label>
+      <ion-input #frDuration placeholder="seconds"></ion-input>
     </ion-item>
   </ion-list>
   <div class="shell-wrap">
@@ -20,5 +24,5 @@
     <ul class="shell-body" [innerHTML]="output">
     </ul>
   </div>
-  <button ion-button full color="secondary" (click)="runAllTasks(cpuDuration.value, wifiDuration.value)">Run all the tasks</button>
+  <button ion-button full color="secondary" (click)="runAllTasks(cpuDuration.value, frDuration.value)">Run all the tasks</button>
 </ion-content>

@@ -17,3 +17,31 @@ interface MyWindow extends Window {
   startPowerMeasurements(fun: (data) => any): any;
   stopPowerMeasurements(fun: (data) => any): any;
 }
+
+declare namespace tracking {
+  class TrackerTask {
+    constructor(tracker: ObjectTracker);
+
+    inRunning(): boolean;
+
+    on(event: string, callback: () => void)
+
+    run(): TrackerTask;
+
+    stop(): TrackerTask;
+  }
+
+  class ObjectTracker {
+    constructor(classifiers: Array<string>);
+
+    setStepSize(size: number);
+
+    on(event: string, callback: (event) => void);
+
+    track(pixels: any, width: number, height: number);
+  }
+
+  function one(element: any): any;
+
+  function track(element: string, tracker: ObjectTracker);
+}

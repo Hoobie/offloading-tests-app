@@ -1,4 +1,4 @@
-import { WifiTask } from "./tasks/wifi-task";
+import { FaceRecognitionTask } from "./tasks/face-recognition-task";
 import { CpuTask } from "./tasks/cpu-task";
 import { TasksRunner } from "./tasks/tasks-runner";
 import { Component } from '@angular/core';
@@ -25,11 +25,12 @@ export class HomePage {
     this.debug("Ready")
   }
 
-  runAllTasks(cpuDuration: number, wifiDuration: number) {
-    console.log("Running all the tasks, cpu for: %d s, wifi for: %d s", cpuDuration, wifiDuration);
+  runAllTasks(cpuDuration: number, frDuration: number) {
+    console.debug("Running all the tasks, CPU for: %d s, FR for: %d s", cpuDuration, frDuration);
     this.plt.ready().then(() => {
       this.tasks.push(new CpuTask(cpuDuration));
-      this.tasks.push(new WifiTask(wifiDuration));
+      this.tasks.push(new FaceRecognitionTask(frDuration));
+      // this.tasks.push(new WifiTask(wifiDuration));
 
       this.debug("Running all the tasks");
 
