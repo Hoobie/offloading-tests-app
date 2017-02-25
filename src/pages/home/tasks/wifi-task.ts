@@ -1,5 +1,4 @@
 import { Task } from "./task";
-import { offloadable } from 'ml-offloading';
 import * as Rx from 'rxjs';
 
 export class WifiTask extends Task {
@@ -14,7 +13,6 @@ export class WifiTask extends Task {
     }), durationSeconds * 1000)
   }
 
-  @offloadable
   static download(callback): any {
     var img = new Image();
     img.onload = callback;
