@@ -24,7 +24,7 @@ export class Task {
           timeout = setTimeout(function() {
             sub.unsubscribe();
             observer.complete();
-          }, now - t.durationMs);
+          }, t.durationMs);
         } else {
           clearTimeout(timeout);
           console.debug("The task is done")
