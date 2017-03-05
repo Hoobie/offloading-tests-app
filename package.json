@@ -27,6 +27,7 @@
     "ionic-native": "2.4.1",
     "ionicons": "3.0.0",
     "ml-offloading": "0.1.0",
+    "ocrad.js": "0.0.1",
     "rxjs": "5.0.0-beta.12",
     "sw-toolbox": "3.4.0",
     "tracking": "^1.1.3",

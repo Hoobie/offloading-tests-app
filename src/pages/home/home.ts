@@ -1,3 +1,4 @@
+import { OcrTask } from "./tasks/ocr-task";
 import { FaceRecognitionTask } from "./tasks/face-recognition-task";
 import { CpuTask } from "./tasks/cpu-task";
 import { TasksRunner } from "./tasks/tasks-runner";
@@ -25,11 +26,12 @@ export class HomePage {
     this.debug("Ready")
   }
 
-  runAllTasks(cpuDuration: number, frDuration: number) {
-    console.debug("Running all the tasks, CPU for: %d s, FR for: %d s", cpuDuration, frDuration);
+  runAllTasks(cpuDuration: number, frDuration: number, ocrDuration: number) {
+    console.debug("Running all the tasks, CPU for: %ds, FR for: %ds, OCR for %ds", cpuDuration, frDuration, ocrDuration);
     this.plt.ready().then(() => {
       this.tasks.push(new CpuTask(cpuDuration));
       this.tasks.push(new FaceRecognitionTask(frDuration));
+      this.tasks.push(new OcrTask(ocrDuration));
       // this.tasks.push(new WifiTask(wifiDuration));
 
       this.debug("Running all the tasks");

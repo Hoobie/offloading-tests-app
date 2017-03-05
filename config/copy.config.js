@@ -20,7 +20,16 @@ module.exports = {
     dest: '{{BUILD}}'
   },
   copyTracking: {
-    src: ['node_modules/tracking/build/tracking.js', 'node_modules/tracking/build/data/eye.js', 'node_modules/tracking/build/data/face.js', 'node_modules/tracking/build/data/mouth.js'],
+    src: [
+      '{{ROOT}}/node_modules/tracking/build/tracking.js',
+      '{{ROOT}}/node_modules/tracking/build/data/eye.js',
+      '{{ROOT}}/node_modules/tracking/build/data/face.js',
+      '{{ROOT}}/node_modules/tracking/build/data/mouth.js'
+    ],
     dest: '{{BUILD}}/tracking'
+  },
+  copyOCRAD: {
+    src: ['{{ROOT}}/node_modules/ocrad.js/ocrad.js'],
+    dest: '{{BUILD}}/OCRAD'
   }
 };

@@ -45,3 +45,5 @@ declare namespace tracking {
 
   function track(element: string, tracker: ObjectTracker);
 }
+
+declare function OCRAD(image: any): string;
