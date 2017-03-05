@@ -14,9 +14,9 @@ export class OcrTask extends Task {
         var canvas = document.createElement('canvas');
         var context = canvas.getContext('2d');
         context.drawImage(img, 0, 0, width, height);
-        let s = OcrTask.ocr(context);
-        observer.next(s);
-        observer.complete();
+        OcrTask.ocr(context).subscribe(
+          function(data) { }, function(err) { }, function() { observer.complete(); }
+        );
       }
     }), durationSeconds * 1000)
   }

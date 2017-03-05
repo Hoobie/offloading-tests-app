@@ -6,8 +6,9 @@ export class CpuTask extends Task {
 
   constructor(durationSeconds: number) {
     super(Rx.Observable.create(function(observer) {
-      CpuTask.calculateSqrts();
-      observer.complete();
+      CpuTask.calculateSqrts().subscribe(
+        function(data) { }, function(err) { }, function() { observer.complete(); }
+      );
     }), durationSeconds * 1000)
   }
 

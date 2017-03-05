@@ -21,8 +21,9 @@ export class FaceRecognitionTask extends Task {
       context.drawImage(img, 0, 0, width, height);
       var imageData: any[] = Array.from(context.getImageData(0, 0, width, height).data);
 
-      FaceRecognitionTask.findObjects(imageData, width, height);
-      observer.complete();
+      FaceRecognitionTask.findObjects(imageData, width, height).subscribe(
+        function(data) { }, function(err) { }, function() { observer.complete(); }
+      );
     }
   }
 
