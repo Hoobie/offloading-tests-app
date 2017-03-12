@@ -16,7 +16,7 @@ export class HomePage {
   progress = 0;
   maxProgress = 100;
   done = false;
-  repeatWithWifiTurnedOf = false;
+  repeatWithWifiTurnedOff = false;
 
   constructor(public navCtrl: NavController, public plt: Platform) {
     let instance = this;
@@ -92,7 +92,7 @@ export class HomePage {
     }
     instance.debug("All the tasks are done");
 
-    if (!instance.done && instance.repeatWithWifiTurnedOf) {
+    if (!instance.done && instance.repeatWithWifiTurnedOff) {
       if (instance.plt.is('cordova')) {
         WifiWizard.setWifiEnabled(
           false,
