@@ -10,20 +10,19 @@ export class TasksRunner {
   }
 
   public runAll(): Rx.Observable<void> {
-    let tasks = this.tasks;
+    let tasksCopy = this.tasks.slice();
 
     return Rx.Observable.create(function(observer) {
-      let count = 0;
       let onCompleteCallback = function() {
-        if (tasks.length > 0) {
-          tasks.shift().run().subscribe(
+        if (tasksCopy.length > 0) {
+          tasksCopy.shift().run().subscribe(
             function(data) {
-              count++;
+              observer.next();
             },
-            function(err) { },
+            function(err) {
+              observer.error();
+            },
             function() {
-              observer.next(count);
-              count = 0;
               onCompleteCallback();
             });
         } else {

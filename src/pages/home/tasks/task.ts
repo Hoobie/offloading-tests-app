@@ -13,15 +13,20 @@ export class Task {
 
   public run(): Rx.Observable<void> {
     let t = this;
-    let i = 0;
+    var i = 0;
     return Rx.Observable.create(function(observer) {
       let onCompleteCallback = function() {
         if (i < t.count) {
-          t.observable.subscribe(function(data) { }, function(err) { }, onCompleteCallback);
-          i++;
-          observer.next();
+          t.observable.subscribe(
+            function(data) { },
+            function(err) { },
+            function() {
+              observer.next();
+              i++;
+              onCompleteCallback();
+            });
         } else {
-          console.debug("The task is done")
+          console.log("The task is done");
           observer.complete();
         }
       };

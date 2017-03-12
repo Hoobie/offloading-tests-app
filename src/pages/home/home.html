@@ -22,6 +22,10 @@
       <ion-label color="secondary">OCR tasks</ion-label>
       <ion-input #ocrCount placeholder="count"></ion-input>
     </ion-item>
+    <ion-item>
+      <ion-label color="secondary">Repeat with WiFi turned off</ion-label>
+      <ion-checkbox color="secondary" checked="false" [(ngModel)]="repeatWithWifiTurnedOf"></ion-checkbox>
+    </ion-item>
   </ion-list>
   <progress class="progress-bar" [value]="progress" [max]="maxProgress"></progress>
   <div class="shell-wrap">

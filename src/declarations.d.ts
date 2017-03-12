@@ -46,4 +46,8 @@ declare namespace tracking {
   function track(element: string, tracker: ObjectTracker);
 }
 
+declare namespace WifiWizard {
+  function setWifiEnabled(enabled: boolean, win: () => void, fail: (err) => void);
+}
+
 declare function OCRAD(image: any): string;
