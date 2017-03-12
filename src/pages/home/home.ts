@@ -2,8 +2,8 @@ import { OcrTask } from "./tasks/ocr-task";
 import { FaceRecognitionTask } from "./tasks/face-recognition-task";
 import { CpuTask } from "./tasks/cpu-task";
 import { TasksRunner } from "./tasks/tasks-runner";
-import { Component } from '@angular/core';
-import { NavController, Platform } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { NavController, Platform  } from 'ionic-angular';
 
 @Component({
   selector: 'page-home',
@@ -13,6 +13,8 @@ export class HomePage {
 
   output = "";
   tasks = [];
+  progress = 0;
+  maxProgress = 100;
 
   constructor(public navCtrl: NavController, public plt: Platform) {
     let t = this;
@@ -26,12 +28,17 @@ export class HomePage {
     this.debug("Ready")
   }
 
-  runAllTasks(cpuDuration: number, frDuration: number, ocrDuration: number) {
-    console.debug("Running all the tasks, CPU for: %ds, FR for: %ds, OCR for %ds", cpuDuration, frDuration, ocrDuration);
+  runAllTasks(cpuCount, frCount, ocrCount) {
+
+    this.progress = 0;
+    this.maxProgress = parseInt(cpuCount) || 0 + parseInt(frCount) || 0 + parseInt(ocrCount) || 0;
+
+    console.debug("Running all the tasks, CPU count: %d, FR count: %d, OCR count: %d", cpuCount, frCount, ocrCount);
+
     this.plt.ready().then(() => {
-      this.tasks.push(new CpuTask(cpuDuration));
-      this.tasks.push(new FaceRecognitionTask(frDuration));
-      this.tasks.push(new OcrTask(ocrDuration));
+      this.tasks.push(new CpuTask(cpuCount));
+      this.tasks.push(new FaceRecognitionTask(frCount));
+      this.tasks.push(new OcrTask(ocrCount));
       // this.tasks.push(new WifiTask(wifiDuration));
 
       this.debug("Running all the tasks");
@@ -45,8 +52,9 @@ export class HomePage {
           }
         });
       }
-      tasksRunner.runAll().subscribe(function(data) {
+      tasksRunner.runAll().subscribe(function(data: any) {
         t.debug("The task is done");
+        t.progress += data;
         if (t.plt.is('cordova')) {
           (window as MyWindow).stopPowerMeasurements(function(battery) {
             t.log("[POW_PROFILES] stats: " + JSON.stringify(battery));

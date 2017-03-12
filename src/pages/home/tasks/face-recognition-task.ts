@@ -4,10 +4,10 @@ import * as Rx from 'rxjs';
 
 export class FaceRecognitionTask extends Task {
 
-  constructor(durationSeconds: number) {
+  constructor(count: number) {
     super(Rx.Observable.create(function(observer) {
       FaceRecognitionTask.recognizeFaces(observer);
-    }), durationSeconds * 1000)
+    }), count);
   }
 
   static recognizeFaces(observer) {

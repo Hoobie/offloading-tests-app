@@ -4,7 +4,7 @@ import * as Rx from 'rxjs';
 
 export class OcrTask extends Task {
 
-  constructor(durationSeconds: number) {
+  constructor(count: number) {
     super(Rx.Observable.create(function(observer) {
       var img = new Image();
       img.src = 'assets/img/sentence.jpg';
@@ -18,7 +18,7 @@ export class OcrTask extends Task {
           function(data) { }, function(err) { }, function() { observer.complete(); }
         );
       }
-    }), durationSeconds * 1000)
+    }), count);
   }
 
   @offloadable

@@ -2,31 +2,25 @@ import * as Rx from 'rxjs';
 
 export class Task {
   observable: Rx.Observable<void>;
-  durationMs: number;
+  count: number;
 
-  constructor(observable: Rx.Observable<void>, durationMs: number) {
+  constructor(observable: Rx.Observable<void>, count: number) {
     this.observable = observable
       .observeOn(Rx.Scheduler.async)
       .subscribeOn(Rx.Scheduler.async);
-    this.durationMs = durationMs;
+    this.count = count;
   }
 
   public run(): Rx.Observable<void> {
     let t = this;
+    let i = 0;
     return Rx.Observable.create(function(observer) {
-      let now = Date.now();
-      let timeout;
-
       let onCompleteCallback = function() {
-        if (Date.now() < now + t.durationMs) {
-          let sub = t.observable.subscribe(function(data) { }, function(err) { }, onCompleteCallback);
-          clearTimeout(timeout);
-          timeout = setTimeout(function() {
-            sub.unsubscribe();
-            observer.complete();
-          }, t.durationMs);
+        if (i < t.count) {
+          t.observable.subscribe(function(data) { }, function(err) { }, onCompleteCallback);
+          i++;
+          observer.next();
         } else {
-          clearTimeout(timeout);
           console.debug("The task is done")
           observer.complete();
         }

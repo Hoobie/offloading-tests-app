@@ -4,12 +4,12 @@ import * as Rx from 'rxjs';
 
 export class CpuTask extends Task {
 
-  constructor(durationSeconds: number) {
+  constructor(count: number) {
     super(Rx.Observable.create(function(observer) {
       CpuTask.calculateSqrts().subscribe(
         function(data) { }, function(err) { }, function() { observer.complete(); }
       );
-    }), durationSeconds * 1000)
+    }), count);
   }
 
   @offloadable
