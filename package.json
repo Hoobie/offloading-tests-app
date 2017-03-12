@@ -43,7 +43,10 @@
     "cordova-plugin-statusbar",
     "cordova-plugin-device",
     "cordova-plugin-splashscreen",
-    "ionic-plugin-keyboard"
+    "ionic-plugin-keyboard",
+    "cordova-plugin-battery-status",
+    "cordova-plugin-battery-advanced",
+    "wifiwizard"    
   ],
   "cordovaPlatforms": [],
   "description": "offloading-tests-app: An Ionic project"
