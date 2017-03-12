@@ -36,6 +36,7 @@ export class HomePage {
 
     console.debug("Running all the tasks, CPU count: %d, FR count: %d, OCR count: %d", cpuCount, frCount, ocrCount);
 
+    this.tasks = [];
     this.tasks.push(new CpuTask(cpuCount));
     this.tasks.push(new FaceRecognitionTask(frCount));
     this.tasks.push(new OcrTask(ocrCount));
@@ -45,9 +46,9 @@ export class HomePage {
   }
 
   runTasks() {
+    this.progress = 0;
     let instance = this;
     let tasksRunner = new TasksRunner(this.tasks);
-    this.progress = 0;
 
     this.debug("Running all the tasks");
 
@@ -71,7 +72,7 @@ export class HomePage {
   }
 
   handleNextTask(data, instance) {
-    instance.progress += 1;
+    instance.progress++;
     if (instance.plt.is('cordova')) {
       (window as MyWindow).stopPowerMeasurements(function(battery) {
         instance.log("[POW_PROFILES] stats: " + JSON.stringify(battery));
@@ -105,8 +106,8 @@ export class HomePage {
       } else {
         instance.runTasks();
       }
-      instance.done = true;
     }
+    instance.done = true;
   }
 
   debug(msg: string) {
