@@ -17,6 +17,7 @@ export class HomePage {
   maxProgress = 100;
   done = false;
   repeatWithWifiTurnedOff = false;
+  useRandomParameters = true;
 
   constructor(public navCtrl: NavController, public plt: Platform) {
     let instance = this;
@@ -37,9 +38,9 @@ export class HomePage {
     console.debug("Running all the tasks, CPU count: %d, FR count: %d, OCR count: %d", cpuCount, frCount, ocrCount);
 
     this.tasks = [];
-    this.tasks.push(new CpuTask(cpuCount));
-    this.tasks.push(new FaceRecognitionTask(frCount));
-    this.tasks.push(new OcrTask(ocrCount));
+    this.tasks.push(new CpuTask(cpuCount, this.useRandomParameters));
+    this.tasks.push(new FaceRecognitionTask(frCount, this.useRandomParameters));
+    this.tasks.push(new OcrTask(ocrCount, this.useRandomParameters));
     // this.tasks.push(new WifiTask(wifiDuration));
 
     this.runTasks();

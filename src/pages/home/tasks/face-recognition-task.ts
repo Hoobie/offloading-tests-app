@@ -4,15 +4,18 @@ import * as Rx from 'rxjs';
 
 export class FaceRecognitionTask extends Task {
 
-  constructor(count: number) {
+  private static IMAGES = ['assets/img/faces.jpg', 'assets/img/faces2.jpg'];
+
+  constructor(count: number, useRandomParams: boolean) {
     super(Rx.Observable.create(function(observer) {
-      FaceRecognitionTask.recognizeFaces(observer);
+      FaceRecognitionTask.recognizeFaces(observer, useRandomParams);
     }), count);
   }
 
-  static recognizeFaces(observer) {
+  static recognizeFaces(observer, useRandomParams) {
     var img = new Image();
-    img.src = 'assets/img/faces.jpg';
+    img.src = useRandomParams ? FaceRecognitionTask.IMAGES[Math.floor(Math.random() * FaceRecognitionTask.IMAGES.length)]
+      : FaceRecognitionTask.IMAGES[0];
     img.onload = function() {
       var width = img.width;
       var height = img.height;

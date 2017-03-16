@@ -4,10 +4,13 @@ import * as Rx from 'rxjs';
 
 export class OcrTask extends Task {
 
-  constructor(count: number) {
+  private static IMAGES = ['assets/img/sentence.jpg', 'assets/img/sentence2.jpg'];
+
+  constructor(count: number, useRandomParams: boolean) {
     super(Rx.Observable.create(function(observer) {
       var img = new Image();
-      img.src = 'assets/img/sentence.jpg';
+      img.src = useRandomParams ? OcrTask.IMAGES[Math.floor(Math.random() * OcrTask.IMAGES.length)]
+        : OcrTask.IMAGES[0];
       img.onload = function() {
         var width = img.width;
         var height = img.height;
