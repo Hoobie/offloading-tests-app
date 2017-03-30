@@ -1,3 +1,6 @@
+import * as Rx from "rxjs";
+import { Task } from "./tasks/task";
+import { Configuration } from "ml-offloading";
 import { OcrTask } from "./tasks/ocr-task";
 import { FaceRecognitionTask } from "./tasks/face-recognition-task";
 import { CpuTask } from "./tasks/cpu-task";
@@ -14,7 +17,7 @@ export class HomePage {
   output = "";
   tasks = [];
   progress = 0;
-  maxProgress = 100;
+  maxProgress: number = 0;
   done = false;
   repeatWithWifiTurnedOff = false;
   useRandomParameters = true;
@@ -32,16 +35,82 @@ export class HomePage {
   }
 
   runAllTasks(cpuCount, frCount, ocrCount) {
-    this.done = false;
-    this.maxProgress = (parseInt(cpuCount) || 0) + (parseInt(frCount) || 0) + (parseInt(ocrCount) || 0);
-
     console.debug("Running all the tasks, CPU count: %d, FR count: %d, OCR count: %d", cpuCount, frCount, ocrCount);
 
+    this.done = false;
     this.tasks = [];
+
+    this.tasks.push(new Task(Rx.Observable.create(function(observer) {
+      Configuration.classifier = Configuration.ClassifierType.KNN;
+      Configuration.execution = Configuration.ExecutionType.LOCAL;
+      observer.complete();
+    }), 1));
     this.tasks.push(new CpuTask(cpuCount, this.useRandomParameters));
     this.tasks.push(new FaceRecognitionTask(frCount, this.useRandomParameters));
     this.tasks.push(new OcrTask(ocrCount, this.useRandomParameters));
-    // this.tasks.push(new WifiTask(wifiDuration));
+
+    this.tasks.push(new Task(Rx.Observable.create(function(observer) {
+      Configuration.execution = Configuration.ExecutionType.PC_OFFLOADING;
+      observer.complete();
+    }), 1));
+    this.tasks.push(new CpuTask(cpuCount, this.useRandomParameters));
+    this.tasks.push(new FaceRecognitionTask(frCount, this.useRandomParameters));
+    this.tasks.push(new OcrTask(ocrCount, this.useRandomParameters));
+
+    this.tasks.push(new Task(Rx.Observable.create(function(observer) {
+      Configuration.execution = Configuration.ExecutionType.CLOUD_OFFLOADING;
+      observer.complete();
+    }), 1));
+    this.tasks.push(new CpuTask(cpuCount, this.useRandomParameters));
+    this.tasks.push(new FaceRecognitionTask(frCount, this.useRandomParameters));
+    this.tasks.push(new OcrTask(ocrCount, this.useRandomParameters));
+
+    this.tasks.push(new Task(Rx.Observable.create(function(observer) {
+      Configuration.execution = Configuration.ExecutionType.PREDICTION;
+      observer.complete();
+    }), 1));
+    this.tasks.push(new CpuTask(cpuCount, this.useRandomParameters));
+    this.tasks.push(new FaceRecognitionTask(frCount, this.useRandomParameters));
+    this.tasks.push(new OcrTask(ocrCount, this.useRandomParameters));
+
+    this.tasks.push(new Task(Rx.Observable.create(function(observer) {
+      Configuration.classifier = Configuration.ClassifierType.NEURAL_NETWORK;
+      Configuration.execution = Configuration.ExecutionType.LOCAL;
+      observer.complete();
+    }), 1));
+    this.tasks.push(new CpuTask(cpuCount, this.useRandomParameters));
+    this.tasks.push(new FaceRecognitionTask(frCount, this.useRandomParameters));
+    this.tasks.push(new OcrTask(ocrCount, this.useRandomParameters));
+
+    this.tasks.push(new Task(Rx.Observable.create(function(observer) {
+      Configuration.execution = Configuration.ExecutionType.PC_OFFLOADING;
+      observer.complete();
+    }), 1));
+    this.tasks.push(new CpuTask(cpuCount, this.useRandomParameters));
+    this.tasks.push(new FaceRecognitionTask(frCount, this.useRandomParameters));
+    this.tasks.push(new OcrTask(ocrCount, this.useRandomParameters));
+
+    this.tasks.push(new Task(Rx.Observable.create(function(observer) {
+      Configuration.execution = Configuration.ExecutionType.CLOUD_OFFLOADING;
+      observer.complete();
+    }), 1));
+    this.tasks.push(new CpuTask(cpuCount, this.useRandomParameters));
+    this.tasks.push(new FaceRecognitionTask(frCount, this.useRandomParameters));
+    this.tasks.push(new OcrTask(ocrCount, this.useRandomParameters));
+
+    this.tasks.push(new Task(Rx.Observable.create(function(observer) {
+      Configuration.execution = Configuration.ExecutionType.PREDICTION;
+      observer.complete();
+    }), 1));
+    this.tasks.push(new CpuTask(cpuCount, this.useRandomParameters));
+    this.tasks.push(new FaceRecognitionTask(frCount, this.useRandomParameters));
+    this.tasks.push(new OcrTask(ocrCount, this.useRandomParameters));
+
+    this.maxProgress = 0;
+    for (let task of this.tasks) {
+      this.maxProgress += parseInt(task.count) || 0;
+    }
+    console.debug("MAX PROGRESS:", this.maxProgress);
 
     this.runTasks();
   }
@@ -53,45 +122,14 @@ export class HomePage {
 
     this.debug("Running all the tasks");
 
-    this.startPowerMeasurements();
     tasksRunner.runAll().subscribe(
-      function(data) { instance.handleNextTask(data, instance) },
-      function(err) { instance.handleTaskError(err, instance) },
+      function(data) { instance.progress++; },
+      function(err) { },
       function() { instance.handleTasksCompletion(instance) }
     );
   }
 
-  startPowerMeasurements() {
-    let instance = this;
-    if (this.plt.is('cordova')) {
-      (window as MyWindow).startPowerMeasurements(function(msg) {
-        if (msg) {
-          instance.log("[POW_PROFILES] " + msg);
-        }
-      });
-    }
-  }
-
-  handleNextTask(data, instance) {
-    instance.progress++;
-    if (instance.plt.is('cordova')) {
-      (window as MyWindow).stopPowerMeasurements(function(battery) {
-        instance.log("[POW_PROFILES] stats: " + JSON.stringify(battery));
-      });
-      instance.startPowerMeasurements();
-    }
-  }
-
-  handleTaskError(err, instance) {
-    if (instance.plt.is('cordova')) {
-      (window as MyWindow).stopPowerMeasurements(function(battery) { });
-    }
-  }
-
   handleTasksCompletion(instance) {
-    if (instance.plt.is('cordova')) {
-      (window as MyWindow).stopPowerMeasurements(function(battery) { });
-    }
     instance.debug("All the tasks are done");
 
     if (!instance.done && instance.repeatWithWifiTurnedOff) {

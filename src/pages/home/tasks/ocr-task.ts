@@ -27,7 +27,6 @@ export class OcrTask extends Task {
   @offloadable
   static ocr(context2d): any {
     let s = OCRAD(context2d);
-    console.log("[OCR] Result: " + s);
     return s;
   }
 }

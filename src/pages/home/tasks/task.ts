@@ -1,10 +1,8 @@
 import * as Rx from 'rxjs';
 
 export class Task {
-  observable: Rx.Observable<void>;
-  count: number;
 
-  constructor(observable: Rx.Observable<void>, count: number) {
+  constructor(public observable: Rx.Observable<void>, public count: number) {
     this.observable = observable
       .observeOn(Rx.Scheduler.async)
       .subscribeOn(Rx.Scheduler.async);

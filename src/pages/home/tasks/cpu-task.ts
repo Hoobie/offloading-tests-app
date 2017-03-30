@@ -21,7 +21,6 @@ export class CpuTask extends Task {
     for (let i = 0; i < maxSqrt; i++) {
       a = Math.sqrt(i);
     }
-    console.log("[CPU] Calculated the result: " + a);
     return a;
   }
 }
