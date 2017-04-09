@@ -15,7 +15,7 @@ export class CpuTask extends Task {
     }), count);
   }
 
-  @offloadable
+  @offloadable(false)
   static calculateSqrts(maxSqrt: number): any {
     let a = 0;
     for (let i = 0; i < maxSqrt; i++) {

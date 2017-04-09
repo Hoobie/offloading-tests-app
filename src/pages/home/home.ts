@@ -106,6 +106,39 @@ export class HomePage {
     this.tasks.push(new FaceRecognitionTask(frCount, this.useRandomParameters));
     this.tasks.push(new OcrTask(ocrCount, this.useRandomParameters));
 
+    this.tasks.push(new Task(Rx.Observable.create(function(observer) {
+      Configuration.classifier = Configuration.ClassifierType.DECISION_TREE;
+      Configuration.execution = Configuration.ExecutionType.LOCAL;
+      observer.complete();
+    }), 1));
+    this.tasks.push(new CpuTask(cpuCount, this.useRandomParameters));
+    this.tasks.push(new FaceRecognitionTask(frCount, this.useRandomParameters));
+    this.tasks.push(new OcrTask(ocrCount, this.useRandomParameters));
+
+    this.tasks.push(new Task(Rx.Observable.create(function(observer) {
+      Configuration.execution = Configuration.ExecutionType.PC_OFFLOADING;
+      observer.complete();
+    }), 1));
+    this.tasks.push(new CpuTask(cpuCount, this.useRandomParameters));
+    this.tasks.push(new FaceRecognitionTask(frCount, this.useRandomParameters));
+    this.tasks.push(new OcrTask(ocrCount, this.useRandomParameters));
+
+    this.tasks.push(new Task(Rx.Observable.create(function(observer) {
+      Configuration.execution = Configuration.ExecutionType.CLOUD_OFFLOADING;
+      observer.complete();
+    }), 1));
+    this.tasks.push(new CpuTask(cpuCount, this.useRandomParameters));
+    this.tasks.push(new FaceRecognitionTask(frCount, this.useRandomParameters));
+    this.tasks.push(new OcrTask(ocrCount, this.useRandomParameters));
+
+    this.tasks.push(new Task(Rx.Observable.create(function(observer) {
+      Configuration.execution = Configuration.ExecutionType.PREDICTION;
+      observer.complete();
+    }), 1));
+    this.tasks.push(new CpuTask(cpuCount, this.useRandomParameters));
+    this.tasks.push(new FaceRecognitionTask(frCount, this.useRandomParameters));
+    this.tasks.push(new OcrTask(ocrCount, this.useRandomParameters));
+
     this.maxProgress = 0;
     for (let task of this.tasks) {
       this.maxProgress += parseInt(task.count) || 0;

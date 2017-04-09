@@ -50,4 +50,6 @@ declare namespace WifiWizard {
   function setWifiEnabled(enabled: boolean, win: () => void, fail: (err) => void);
 }
 
-declare function OCRAD(image: any): string;
+declare namespace Tesseract {
+    function recognize(imageData: any): any;
+}

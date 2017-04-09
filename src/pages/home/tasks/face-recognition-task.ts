@@ -30,7 +30,7 @@ export class FaceRecognitionTask extends Task {
     }
   }
 
-  @offloadable
+  @offloadable(false)
   static findObjects(imageData, width, height): any {
     var results: any[] = [];
     var uint8ImageData = new Uint8ClampedArray(imageData);

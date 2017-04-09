@@ -28,8 +28,8 @@ module.exports = {
     ],
     dest: '{{BUILD}}/tracking'
   },
-  copyOCRAD: {
-    src: ['{{ROOT}}/node_modules/ocrad.js/ocrad.js'],
-    dest: '{{BUILD}}/OCRAD'
+  copyOCR: {
+    src: ['{{ROOT}}/node_modules/tesseract.js/dist/tesseract.js'],
+    dest: '{{BUILD}}/OCR'
   }
 };
