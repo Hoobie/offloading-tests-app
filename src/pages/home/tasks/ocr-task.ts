@@ -4,7 +4,8 @@ import * as Rx from 'rxjs';
 
 export class OcrTask extends Task {
 
-  private static IMAGES = ['assets/img/sentence.jpg', 'assets/img/sentence2.jpg'];
+  private static IMAGES = ['assets/img/ocr1.jpg', 'assets/img/ocr2.jpg',
+    'assets/img/ocr3.jpg', 'assets/img/ocr4.jpg', 'assets/img/ocr5.jpg'];
 
   constructor(count: number, useRandomParams: boolean) {
     // HACK BEGIN
@@ -20,11 +21,15 @@ export class OcrTask extends Task {
         var width = img.width;
         var height = img.height;
         var canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
         var context = canvas.getContext('2d');
         context.drawImage(img, 0, 0, width, height);
-        var imageArr: any[] = Array.from(context.getImageData(0, 0, width, height).data);
+        var b64encoded = canvas.toDataURL(img.src.endsWith("jpg") ? 'image/jpeg' : 'image/png').split(',')[1];
 
-        subject = t.ocr(imageArr, width, height);
+        console.log("Image: ", img.src);
+
+        subject = t.ocr(b64encoded, width, height);
         subject.subscribe(
           function(data) { },
           function(err) { },
@@ -37,12 +42,17 @@ export class OcrTask extends Task {
   }
 
   @offloadable(true)
-  ocr(imageArr, width, height): any {
-    var uint8ImageData = new Uint8ClampedArray(imageArr);
+  ocr(b64encoded, width, height): any {
+    var byteString = atob(b64encoded);
+    var imageArray = new Uint8ClampedArray(byteString.length);
+    for (var i = 0; i < byteString.length; i++) {
+      imageArray[i] = byteString.charCodeAt(i);
+    }
+
     var imageData = {
       width: width,
       height: height,
-      data: uint8ImageData
+      data: imageArray
     }
 
     Tesseract.recognize(imageData)
@@ -53,7 +63,6 @@ export class OcrTask extends Task {
 var subject: Rx.Subject<any>;
 
 function callback(result) {
-  console.log(result);
   subject.next(result);
   subject.complete();
 }

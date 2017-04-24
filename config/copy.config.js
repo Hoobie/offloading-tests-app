@@ -27,9 +27,5 @@ module.exports = {
       '{{ROOT}}/node_modules/tracking/build/data/mouth.js'
     ],
     dest: '{{BUILD}}/tracking'
-  },
-  copyOCR: {
-    src: ['{{ROOT}}/node_modules/tesseract.js/dist/tesseract.js'],
-    dest: '{{BUILD}}/OCR'
   }
 };

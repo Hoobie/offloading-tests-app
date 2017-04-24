@@ -4,7 +4,8 @@ import * as Rx from 'rxjs';
 
 export class FaceRecognitionTask extends Task {
 
-  private static IMAGES = ['assets/img/faces.jpg', 'assets/img/faces2.jpg'];
+  private static IMAGES = ['assets/img/faces1.jpg', 'assets/img/faces2.jpg',
+  'assets/img/faces3.jpg', 'assets/img/faces4.jpg', 'assets/img/faces5.jpg'];
 
   constructor(count: number, useRandomParams: boolean) {
     super(Rx.Observable.create(function(observer) {
@@ -20,24 +21,39 @@ export class FaceRecognitionTask extends Task {
       var width = img.width;
       var height = img.height;
       var canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
       var context = canvas.getContext('2d');
       context.drawImage(img, 0, 0, width, height);
-      var imageData: any[] = Array.from(context.getImageData(0, 0, width, height).data);
+      var b64encoded = canvas.toDataURL(img.src.endsWith("jpg") ? 'image/jpeg' : 'image/png').split(',')[1];
 
-      FaceRecognitionTask.findObjects(imageData, width, height).subscribe(
+      console.log("Image: ", img.src);
+
+      let trackers = ['face', 'eye', 'mouth'];
+      if (useRandomParams) {
+        for (let i = 0; i < 2; i++) {
+          if (Math.random() > 0.5) {
+            trackers.pop();
+          }
+        }
+      }
+      FaceRecognitionTask.findObjects(b64encoded, width, height, trackers).subscribe(
         function(data) { }, function(err) { }, function() { observer.complete(); }
       );
     }
   }
 
   @offloadable(false)
-  static findObjects(imageData, width, height): any {
-    var results: any[] = [];
-    var uint8ImageData = new Uint8ClampedArray(imageData);
+  static findObjects(b64encoded, width, height, trackers): any {
+    var results = [];
+    var byteString = atob(b64encoded);
+    var imageArray = new Uint8ClampedArray(byteString.length);
+    for (var i = 0; i < byteString.length; i++) {
+      imageArray[i] = byteString.charCodeAt(i);
+    }
 
-    var tracker = new tracking.ObjectTracker(['face', 'eye', 'mouth']);
+    var tracker = new tracking.ObjectTracker(trackers);
     var task = new tracking.TrackerTask(tracker);
-    tracker.setStepSize(1.7);
 
     tracker.on('track', function(event) {
       event.data.forEach(function(rect) {
@@ -47,7 +63,7 @@ export class FaceRecognitionTask extends Task {
     });
 
     task.on('run', function() {
-      tracker.track(uint8ImageData, width, height);
+      tracker.track(imageArray, width, height);
     });
     task.run();
 
