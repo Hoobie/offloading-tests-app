@@ -4,19 +4,15 @@ import * as Rx from 'rxjs';
 
 export class FaceRecognitionTask extends Task {
 
-  private static IMAGES = ['assets/img/faces1.jpg', 'assets/img/faces2.jpg',
-  'assets/img/faces3.jpg', 'assets/img/faces4.jpg', 'assets/img/faces5.jpg'];
-
-  constructor(count: number, useRandomParams: boolean) {
+  constructor(imgSrc: string, classifier: string) {
     super(Rx.Observable.create(function(observer) {
-      FaceRecognitionTask.recognizeFaces(observer, useRandomParams);
-    }), count);
+      FaceRecognitionTask.recognizeFaces(observer, imgSrc, classifier);
+    }));
   }
 
-  static recognizeFaces(observer, useRandomParams) {
+  static recognizeFaces(observer, imgSrc, classifier) {
     var img = new Image();
-    img.src = useRandomParams ? FaceRecognitionTask.IMAGES[Math.floor(Math.random() * FaceRecognitionTask.IMAGES.length)]
-      : FaceRecognitionTask.IMAGES[0];
+    img.src = imgSrc;
     img.onload = function() {
       var width = img.width;
       var height = img.height;
@@ -29,36 +25,31 @@ export class FaceRecognitionTask extends Task {
 
       console.log("Image: ", img.src);
 
-      let trackers = ['face', 'eye', 'mouth'];
-      if (useRandomParams) {
-        for (let i = 0; i < 2; i++) {
-          if (Math.random() > 0.5) {
-            trackers.pop();
-          }
-        }
-      }
-      FaceRecognitionTask.findObjects(b64encoded, width, height, trackers).subscribe(
-        function(data) { }, function(err) { }, function() { observer.complete(); }
+      subject = FaceRecognitionTask.findObjects(b64encoded, width, height, classifier);
+      subject.subscribe(
+        function(data) { }, function(err) { observer.error(err); }, function() { observer.complete(); }
       );
     }
   }
 
-  @offloadable(false)
-  static findObjects(b64encoded, width, height, trackers): any {
-    var results = [];
+  @offloadable(true)
+  static findObjects(b64encoded, width, height, classifier): any {
+    var results;
     var byteString = atob(b64encoded);
     var imageArray = new Uint8ClampedArray(byteString.length);
     for (var i = 0; i < byteString.length; i++) {
       imageArray[i] = byteString.charCodeAt(i);
     }
 
-    var tracker = new tracking.ObjectTracker(trackers);
+    var tracker = new tracking.ObjectTracker(classifier);
+    tracker.setEdgesDensity(0.1);
+    tracker.setInitialScale(1.0);
+    tracker.setScaleFactor(1.25);
+    tracker.setStepSize(1.5);
     var task = new tracking.TrackerTask(tracker);
 
     tracker.on('track', function(event) {
-      event.data.forEach(function(rect) {
-        results.push([rect.x, rect.y, rect.width, rect.height]);
-      });
+      results = event.data;
       task.stop();
     });
 
@@ -67,10 +58,19 @@ export class FaceRecognitionTask extends Task {
     });
     task.run();
 
-    while (task.inRunning()) {
-      // wait
-      // FIXME
-    }
-    return results;
+    const int = setInterval(function() {
+      if (!task.inRunning()) {
+        clearInterval(int);
+        console.log("fr done");
+        callback(results);
+      }
+    }, 10);
   }
+}
+
+var subject: Rx.Subject<any>;
+
+function callback(result) {
+  subject.next(result);
+  subject.complete();
 }

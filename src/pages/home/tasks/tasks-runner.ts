@@ -15,14 +15,14 @@ export class TasksRunner {
     return Rx.Observable.create(function(observer) {
       let onCompleteCallback = function() {
         if (tasksCopy.length > 0) {
-          tasksCopy.shift().run().subscribe(
-            function(data) {
-              observer.next();
-            },
+          tasksCopy.shift().observable.subscribe(
+            function(data) { },
             function(err) {
               observer.error();
             },
             function() {
+              console.log("The task is done")
+              observer.next();
               onCompleteCallback();
             });
         } else {

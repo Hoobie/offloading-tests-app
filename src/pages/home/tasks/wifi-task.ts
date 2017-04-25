@@ -10,7 +10,7 @@ export class WifiTask extends Task {
         observer.complete();
       };
       WifiTask.download(ld);
-    }), durationSeconds * 1000)
+    }));
   }
 
   static download(callback): any {

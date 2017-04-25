@@ -4,19 +4,15 @@ import * as Rx from 'rxjs';
 
 export class OcrTask extends Task {
 
-  private static IMAGES = ['assets/img/ocr1.jpg', 'assets/img/ocr2.jpg',
-    'assets/img/ocr3.jpg', 'assets/img/ocr4.jpg', 'assets/img/ocr5.jpg'];
-
-  constructor(count: number, useRandomParams: boolean) {
+  constructor(imgSrc: string) {
     // HACK BEGIN
-    super(null, count);
+    super(null);
     let t = this;
     // HACK END
 
     this.observable = Rx.Observable.create(function(observer) {
       var img = new Image();
-      img.src = useRandomParams ? OcrTask.IMAGES[Math.floor(Math.random() * OcrTask.IMAGES.length)]
-        : OcrTask.IMAGES[0];
+      img.src = imgSrc;
       img.onload = function() {
         var width = img.width;
         var height = img.height;
@@ -32,11 +28,13 @@ export class OcrTask extends Task {
         subject = t.ocr(b64encoded, width, height);
         subject.subscribe(
           function(data) { },
-          function(err) { },
+          function(err) {
+            observer.error(err);
+          },
           function() {
             observer.complete();
           }
-        )
+        );
       }
     }).observeOn(Rx.Scheduler.async).subscribeOn(Rx.Scheduler.async);
   }
@@ -55,8 +53,9 @@ export class OcrTask extends Task {
       data: imageArray
     }
 
-    Tesseract.recognize(imageData)
-      .then(callback);
+    Tesseract.recognize(imageData, {
+      lang: 'eng',
+    }).then(callback);
   }
 }
 

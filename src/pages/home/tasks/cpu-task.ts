@@ -7,13 +7,13 @@ export class CpuTask extends Task {
   private static MIN_SQRT = 10000000;
   private static MAX_SQRT = 100000000;
 
-  constructor(count: number, useRandomParams: boolean) {
+  constructor(useRandomParams: boolean) {
     super(Rx.Observable.create(function(observer) {
       let maxSqrt = useRandomParams ? Math.floor(CpuTask.MIN_SQRT + (Math.random() * CpuTask.MAX_SQRT)) : CpuTask.MAX_SQRT;
       CpuTask.calculateSqrts(maxSqrt).subscribe(
         function(data) { }, function(err) { }, function() { observer.complete(); }
       );
-    }), count);
+    }));
   }
 
   @offloadable(false)

@@ -32,8 +32,11 @@ declare namespace tracking {
   }
 
   class ObjectTracker {
-    constructor(classifiers: Array<string>);
+    constructor(classifier: string);
 
+    setEdgesDensity(density: number);
+    setInitialScale(scale: number);
+    setScaleFactor(factor: number);
     setStepSize(size: number);
 
     on(event: string, callback: (event) => void);
@@ -51,5 +54,5 @@ declare namespace WifiWizard {
 }
 
 declare namespace Tesseract {
-    function recognize(imageData: any): any;
+  function recognize(imageData: any, options?: any): any;
 }

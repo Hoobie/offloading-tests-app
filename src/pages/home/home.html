@@ -14,45 +14,25 @@
       <ion-label color="secondary">Cloud</ion-label>
       <ion-input placeholder="IP address" [(ngModel)]="remoteEndpoint"></ion-input>
     </ion-item>
-    <!-- <ion-item>
-      <ion-label color="secondary">CPU tasks</ion-label>
-      <ion-input #cpuCount placeholder="count"></ion-input>
-    </ion-item> -->
-    <!-- <ion-item>
-      <ion-label color="secondary">Duration of WiFi tasks</ion-label>
-      <ion-input #wifiDuration placeholder="seconds"></ion-input>
-    </ion-item> -->
     <ion-item>
-      <ion-label color="secondary">FR tasks</ion-label>
-      <ion-input #frCount placeholder="count"></ion-input>
+      <ion-label color="secondary">Random training rounds</ion-label>
+      <ion-input [(ngModel)]="randomTrainingRounds" placeholder="count"></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label color="secondary">OCR tasks</ion-label>
-      <ion-input #ocrCount placeholder="count"></ion-input>
+      <ion-label color="secondary">Testing rounds</ion-label>
+      <ion-input [(ngModel)]="testingRounds" placeholder="count"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label color="secondary">Repeat with WiFi turned off</ion-label>
       <ion-checkbox color="secondary" checked="false" [(ngModel)]="repeatWithWifiTurnedOff"></ion-checkbox>
     </ion-item>
-    <ion-item>
-      <ion-label color="secondary">Use random parameters</ion-label>
-      <ion-checkbox color="secondary" checked="true" [(ngModel)]="useRandomParameters"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-      <ion-label color="secondary">Classifier</ion-label>
-      <ion-select color="secondary" [(ngModel)]="classifier">
-        <ion-option value="KNN" selected="true">KNN</ion-option>
-        <ion-option value="NEURAL_NETWORK">Neural network</ion-option>
-        <ion-option value="DECISION_TREE">Decision tree</ion-option>
-      </ion-select>
-    </ion-item>
   </ion-list>
   <h4>Progress:</h4>
-  <progress class="progress-bar" [value]="progress" [max]="maxProgress"></progress>
+  <progress class="progress-bar" [value]="progress" [max]="tasks.length"></progress>
   <div class="shell-wrap">
     <p class="shell-top-bar">CONSOLE</p>
     <ul class="shell-body" [innerHTML]="output">
     </ul>
   </div>
-  <button ion-button full color="secondary" (click)="runAllTasks(frCount.value, ocrCount.value)">Run all the tasks</button>
+  <button ion-button full color="secondary" (click)="runAllTasks()">Run all the tasks</button>
 </ion-content>
