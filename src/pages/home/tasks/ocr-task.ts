@@ -36,7 +36,7 @@ export class OcrTask extends Task {
           }
         );
       }
-    }).observeOn(Rx.Scheduler.async).subscribeOn(Rx.Scheduler.async);
+    }).observeOn(Rx.Scheduler.asap).subscribeOn(Rx.Scheduler.asap);
   }
 
   @offloadable(true)
