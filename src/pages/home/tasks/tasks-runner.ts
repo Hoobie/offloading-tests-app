@@ -18,7 +18,7 @@ export class TasksRunner {
           tasksCopy.shift().observable.subscribe(
             function(data) { },
             function(err) {
-              observer.error();
+              observer.error(err);
             },
             function() {
               console.log("The task is done")
@@ -31,6 +31,6 @@ export class TasksRunner {
         }
       };
       onCompleteCallback();
-    }).subscribeOn(Rx.Scheduler.async).observeOn(Rx.Scheduler.async);
+    }).subscribeOn(Rx.Scheduler.asap).observeOn(Rx.Scheduler.asap);
   }
 }

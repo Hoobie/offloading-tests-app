@@ -8,11 +8,10 @@ export class OcrTask extends Task {
     // HACK BEGIN
     super(null);
     let t = this;
-    // HACK END
+    // END
 
     this.observable = Rx.Observable.create(function(observer) {
       var img = new Image();
-      img.src = imgSrc;
       img.onload = function() {
         var width = img.width;
         var height = img.height;
@@ -21,7 +20,7 @@ export class OcrTask extends Task {
         canvas.height = height;
         var context = canvas.getContext('2d');
         context.drawImage(img, 0, 0, width, height);
-        var b64encoded = canvas.toDataURL(img.src.endsWith("jpg") ? 'image/jpeg' : 'image/png').split(',')[1];
+        var b64encoded = canvas.toDataURL(img.src.endsWith("jpg") ? 'image/jpeg' : 'image/png');
 
         console.log("Image: ", img.src);
 
@@ -36,27 +35,37 @@ export class OcrTask extends Task {
           }
         );
       }
+      img.src = imgSrc;
     }).observeOn(Rx.Scheduler.asap).subscribeOn(Rx.Scheduler.asap);
   }
 
   @offloadable(true)
   ocr(b64encoded, width, height): any {
-    var byteString = atob(b64encoded);
-    var imageArray = new Uint8ClampedArray(byteString.length);
-    for (var i = 0; i < byteString.length; i++) {
-      imageArray[i] = byteString.charCodeAt(i);
-    }
+    var img = new Image();
+    img.onload = function() {
+      var canvas = new Canvas(width, height);
+      var context = canvas.getContext('2d');
+      context.drawImage(img, 0, 0, width, height);
+      var imageData = context.getImageData(0, 0, width, height);
+      var imageData2 = {
+        data: imageData.data,
+        width: width,
+        height: height
+      };
 
-    var imageData = {
-      width: width,
-      height: height,
-      data: imageArray
+      Tesseract.recognize(imageData2, {
+        lang: 'eng',
+      }).then(callback);
     }
-
-    Tesseract.recognize(imageData, {
-      lang: 'eng',
-    }).then(callback);
+    img.src = b64encoded;
   }
+}
+
+function Canvas(width, height): void {
+  let canv = document.createElement('canvas');
+  canv.width = width;
+  canv.height = height;
+  return <any>canv;
 }
 
 var subject: Rx.Subject<any>;
