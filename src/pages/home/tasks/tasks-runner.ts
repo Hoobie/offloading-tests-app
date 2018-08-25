@@ -31,6 +31,6 @@ export class TasksRunner {
         }
       };
       onCompleteCallback();
-    }).subscribeOn(Rx.Scheduler.asap).observeOn(Rx.Scheduler.asap);
+    }).subscribeOn(Rx.Scheduler.asap);
   }
 }
